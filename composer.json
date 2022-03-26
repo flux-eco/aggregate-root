@@ -1,0 +1,54 @@
+{
+  "name": "flux-eco/aggregate-root",
+  "description": "Component for flux-capacitor apps developed by fluxlabs ag",
+  "version": "0.0.1",
+  "type": "flux-app",
+  "keywords": [
+    "flux-ecosystem",
+    "flux-capacitor",
+    "fluxlabs ag",
+    "microservice",
+    "event sourcing",
+    "cqrs",
+    "json schema",
+    "asyncapi"
+  ],
+  "homepage": "https://fluxlabs.ch",
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "fluxlabs ag",
+      "email": "support@fluxlabs.ch",
+      "homepage": "https://fluxlabs.ch",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "support@fluxlabs.ch"
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-yaml": "*"
+  },
+  "require-dev": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "FluxEco\\AggregateRoot\\": [
+        "src/"
+      ]
+    }
+  },
+  "config": {
+    "classmap-authoritative": true,
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform-check": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true
+    }
+  }
+}
