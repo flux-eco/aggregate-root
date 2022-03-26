@@ -1,0 +1,34 @@
+---
+$id: urn:ch:flux-app::AggregateRootEvent
+name: AggregateRootEvent
+properties:
+  eventId:
+    type: string
+    readOnly: true
+  aggregateId:
+    type: string
+    readOnly: true
+  correlationId:
+    type: string
+    readOnly: true
+  aggregateName:
+    type: string
+    readOnly: true
+  sequence:
+    type: integer
+    readOnly: true
+  createdDateTime:
+    type: string
+    format: date-time
+    readOnly: true
+  createdBy:
+    type: string
+    format: email
+    readOnly: true
+  rootObjectSchema:
+    type: object
+  eventName:
+    type: string
+  payload:
+    type: object
+...

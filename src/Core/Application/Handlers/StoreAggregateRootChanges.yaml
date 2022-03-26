@@ -1,0 +1,12 @@
+type: object
+properties:
+  correlationId:
+    type: string
+  aggregateName:
+    type: string
+  aggregateId:
+    type: string
+  createdBy:
+    type: string
+  rootObject:
+    type: object
