@@ -3,7 +3,7 @@
 
 namespace FluxEco\AggregateRoot\Adapters\SchemaReader;
 use  FluxEco\AggregateRoot\Core\Domain;
-use Flux\Eco\SchemaFile\Adapters\Api;
+use FluxEco\JsonSchemaDocument\Adapters\Api;
 
 class SchemaDocument
 {

@@ -3,7 +3,7 @@
 namespace FluxEco\AggregateRoot\Adapters\Assert;
 
 use FluxEco\AggregateRoot\Core\Ports;
-use Flux\Eco\Assert\Adapters\Api;
+use FluxEco\JsonSchemaAssertion\Api;
 
 class AsserterClientClientAssert implements Ports\Assert\AssertJsonSchemaClient
 {

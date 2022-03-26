@@ -5,7 +5,7 @@ namespace FluxEco\AggregateRoot\Adapters\Storage;
 use FluxEco\AggregateRoot\Core\Application;
 use FluxEco\AggregateRoot\Core\Domain;
 use FluxEco\AggregateRoot\Core\Ports;
-use Flux\Eco\Storage\Adapters\Api\StorageApi;
+use FluxEco\Storage\Adapters\Api\StorageApi;
 
 class EventStorageClientClient implements Ports\Storage\AggregateEventStorageClient
 {

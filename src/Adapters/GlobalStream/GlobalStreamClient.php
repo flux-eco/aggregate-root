@@ -4,7 +4,7 @@
 namespace FluxEco\AggregateRoot\Adapters\GlobalStream;
 
 use FluxEco\AggregateRoot\Core\{Domain\AggregateRoot, Ports};
-use Flux\Eco\GlobalStream\Adapters\Api;
+use FluxEco\GlobalStream\Adapters\Api;
 
 class GlobalStreamClient implements Ports\GlobalStream\GlobalStreamClient
 {

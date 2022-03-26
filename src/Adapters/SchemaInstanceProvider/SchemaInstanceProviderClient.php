@@ -3,7 +3,7 @@
 
 namespace FluxEco\AggregateRoot\Adapters\SchemaInstanceProvider;
 use FluxEco\AggregateRoot\Core\{Domain, Domain\Models, Ports};
-use Flux\Eco\ObjectProvider\SchemaInstance\Adapters\Api\{SchemaInstanceApi};
+use FluxEco\JsonSchemaInstance\Adapters\Api\{SchemaInstanceApi};
 
 class SchemaInstanceProviderClient implements Ports\SchemaInstanceProvider\SchemaInstanceProvider
 {
