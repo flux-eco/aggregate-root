@@ -122,22 +122,6 @@ class AggregateRootEventStream implements Ports\Storage\AggregateRootEventStream
         return $this->aggregateName;
     }
 
-   /* public function __destruct()
-    {
-        echo PHP_EOL;
-        echo "destructAggregateRootEventStrean";
-        echo PHP_EOL;
-            echo "recordedEvents:";
-            echo PHP_EOL;
-            print_r($this->recordedEvents);
-        echo PHP_EOL;
-        echo PHP_EOL;
-
-        $this->storeAggregateRootEvents();
-    }
-   */
-
-
     public function storeAggregateRootEvents(): void
     {
         if ($this->hasRecordedEvents()) {

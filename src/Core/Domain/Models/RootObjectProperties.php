@@ -39,9 +39,7 @@ class RootObjectProperties implements \IteratorAggregate
 
     public function offsetUnset(mixed $offset): void
     {
-        echo "unset: ".$offset.PHP_EOL;
         unset($this->properties[$offset]);
-        print_r($this->properties).PHP_EOL;
     }
 
     public function count(): int

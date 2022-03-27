@@ -239,9 +239,6 @@ class AggregateRoot implements \JsonSerializable
     {
         $eventArrayList = $this->eventStream->getEvents();
 
-        echo "eventStreamEvents: ";
-        print_r($eventArrayList);
-
         if (count($eventArrayList) > 0) {
             foreach ($eventArrayList as $event) {
                 $this->applyEvent(

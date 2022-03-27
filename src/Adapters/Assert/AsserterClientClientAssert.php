@@ -7,16 +7,16 @@ use FluxEco\JsonSchemaAssertion\Api;
 
 class AsserterClientClientAssert implements Ports\Assert\AssertJsonSchemaClient
 {
-    private Api\AssertApi $assertApi;
+    private Api\JsonSchemaAssertionApi $assertApi;
 
-    private function __construct(Api\AssertApi $assertApi)
+    private function __construct(Api\JsonSchemaAssertionApi $assertApi)
     {
         $this->assertApi = $assertApi;
     }
 
     public static function new(): self
     {
-        $assertApi = Api\AssertApi::new();
+        $assertApi = Api\JsonSchemaAssertionApi::new();
         return new self($assertApi);
     }
 

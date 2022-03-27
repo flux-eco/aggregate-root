@@ -3,21 +3,21 @@
 
 namespace FluxEco\AggregateRoot\Adapters\SchemaInstanceProvider;
 use FluxEco\AggregateRoot\Core\{Domain, Domain\Models, Ports};
-use FluxEco\JsonSchemaInstance\Adapters\Api\{SchemaInstanceApi};
+use FluxEco\JsonSchemaInstance\Adapters\Api\{JsonSchemaInstanceApi};
 
 class SchemaInstanceProviderClient implements Ports\SchemaInstanceProvider\SchemaInstanceProvider
 {
 
-    private SchemaInstanceApi $objectProviderApi;
+    private JsonSchemaInstanceApi $objectProviderApi;
 
-    private function __construct(SchemaInstanceApi $objectProviderApi)
+    private function __construct(JsonSchemaInstanceApi $objectProviderApi)
     {
         $this->objectProviderApi = $objectProviderApi;
     }
 
     public static function new(): self
     {
-        $objectProviderApi = SchemaInstanceApi::new();
+        $objectProviderApi = JsonSchemaInstanceApi::new();
         return new self($objectProviderApi);
     }
 

@@ -20,7 +20,7 @@ class SchemaFileReaderClient implements Ports\SchemaReader\SchemaFileReader
 
     public function readSchemaFile(string $schemaFilePath): Domain\Models\SchemaDocument
     {
-        $schemaFileReader = Api\SchemaFileReaderApi::new();
+        $schemaFileReader = Api\JsonSchemaDocumentApi::new();
         $schemaDocument = $schemaFileReader->getSchemaDocument($schemaFilePath);
 
         return SchemaDocument::fromApi($schemaDocument)->toDomain();

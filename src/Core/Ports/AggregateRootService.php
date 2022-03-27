@@ -62,10 +62,6 @@ class AggregateRootService
 
         $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
-        echo 'rootObjectSchemaFileLink' . PHP_EOL;
-        print_r($this->outbounds->getAggregateRootSchema($aggregateName));
-        echo PHP_EOL . PHP_EOL;
-
         $aggregateRoot->create(
             $correlationId,
             $actorEmail,
@@ -91,10 +87,6 @@ class AggregateRootService
         $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
         $rootObjectSchemaFileLink = $this->outbounds->getAggregateRootSchema($aggregateName);
-
-        echo 'rootObjectSchemaFileLink' . PHP_EOL;
-        print_r($rootObjectSchemaFileLink);
-        echo PHP_EOL . PHP_EOL;
 
         $aggregateRoot->change(
             $correlationId,
