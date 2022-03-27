@@ -41,7 +41,7 @@ class AggregateRootApi
 
     final public function initializeAggregateRoots(): void
     {
-        $this->aggregateRootService->initialiceAggregateRoots($aggregateName);
+        $this->aggregateRootService->initialiceAggregateRoots();
     }
 
     /**
