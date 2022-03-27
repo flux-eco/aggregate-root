@@ -3,7 +3,7 @@
 namespace FluxEco\AggregateRoot\Adapters\ValueObjectProvider;
 
 use FluxEco\AggregateRoot\Core\Domain;
-use FluxEco\ValueObjectAdapters\Api;
+use FluxEco\ValueObject\Adapters\Api;
 
 class ValueObjectAdapter
 {

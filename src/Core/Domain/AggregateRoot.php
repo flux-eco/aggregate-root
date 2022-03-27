@@ -3,7 +3,7 @@
 namespace FluxEco\AggregateRoot\Core\Domain;
 
 use Exception;
-use FluxEco\AggregateRoot\Core\{Application, Domain\Models, Ports\Configs\AggregateRootOutbounds};
+use FluxEco\AggregateRoot\Core\{Application, Domain\Models, Ports\Configs\Outbounds};
 
 
 class AggregateRoot implements \JsonSerializable
@@ -33,13 +33,13 @@ class AggregateRoot implements \JsonSerializable
     private ?Models\RootObject $rootObject = null;
 
     private AggregateRootEventStream $eventStream;
-    private AggregateRootOutbounds $aggregateRootOutbounds;
+    private Outbounds $aggregateRootOutbounds;
 
     private function __construct(
         string                   $aggregateId,
         string                   $aggregateName,
         AggregateRootEventStream $eventStream,
-        AggregateRootOutbounds   $aggregateRootOutbounds
+        Outbounds   $aggregateRootOutbounds
     )
     {
         $this->aggregateId = $aggregateId;
@@ -56,7 +56,7 @@ class AggregateRoot implements \JsonSerializable
     public static function new(
         string                 $aggregateId,
         string                 $aggregateName,
-        AggregateRootOutbounds $aggregateRootOutbounds
+        Outbounds $aggregateRootOutbounds
 
     ): self
     {

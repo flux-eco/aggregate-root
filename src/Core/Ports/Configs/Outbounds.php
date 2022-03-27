@@ -3,10 +3,11 @@
 namespace FluxEco\AggregateRoot\Core\Ports\Configs;
 use FluxEco\AggregateRoot\Core\Ports;
 
-interface AggregateRootOutbounds
+interface Outbounds
 {
+    public function getAppAggregateRootSchemaDirectory(): string;
     public function getDatabaseName(): string;
-    public function getAggregateEventSchema(): array;
+    public function getAggregateRootEventSchema(): array;
     public function getAggregateEventStorageClient(string $aggregateName): Ports\Storage\AggregateEventStorageClient;
     public function getSchemaInstanceProvider(): Ports\SchemaInstanceProvider\SchemaInstanceProvider;
     public function getSchemaFileReader(): Ports\SchemaReader\SchemaFileReader;

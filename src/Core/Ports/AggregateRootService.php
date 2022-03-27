@@ -6,50 +6,65 @@ use FluxEco\AggregateRoot\Core\{Application\Handlers, Application\Processes, Dom
 
 class AggregateRootService
 {
-    private Configs\AggregateRootOutbounds $aggregateRootOutbounds;
-
+    private Configs\Outbounds $outbounds;
 
     private function __construct(
-        Configs\AggregateRootOutbounds $aggregateRootOutbounds
-    )
-    {
-        $this->aggregateRootOutbounds = $aggregateRootOutbounds;
+        Configs\Outbounds $outbounds
+    ) {
+        $this->outbounds = $outbounds;
     }
 
-    public static function new(Configs\AggregateRootOutbounds $aggregateRootOutbounds): self
+    public static function new(Configs\Outbounds $aggregateRootOutbounds) : self
     {
         return new self(
             $aggregateRootOutbounds
         );
     }
 
-    final public function createEventStorage(string $aggregateName): void
+    final public function initialiceAggregateRoots() : void
     {
-        $createEventStorageProcess = Processes\CreateAggregateRootEventStorageProcess::new();
+        foreach ($this->getAggregateRootSchemas() as $schema) {
+            $aggregateName = $schema['name'];
 
-        $eventStorage = $this->aggregateRootOutbounds->getAggregateEventStorageClient($aggregateName);
-        $eventSchema = $this->aggregateRootOutbounds->getAggregateEventSchema();
+            $createEventStorageProcess = Processes\CreateAggregateRootEventStorageProcess::new();
 
-        $command = Handlers\CreateAggregateRootEventStorageCommand::new($aggregateName, $eventSchema);
-        $handler = Handlers\CreateAggregateRootEventStorageHandler::new($eventStorage);
-        $createEventStorageProcess->process($command, $handler);
+            $eventStorage = $this->outbounds->getAggregateEventStorageClient($aggregateName);
+            $eventSchema = $this->outbounds->getAggregateRootEventSchema();
+
+            $command = Handlers\CreateAggregateRootEventStorageCommand::new($aggregateName, $eventSchema);
+            $handler = Handlers\CreateAggregateRootEventStorageHandler::new($eventStorage);
+            $createEventStorageProcess->process($command, $handler);
+        }
     }
 
-    public function createAggregateRoot(string $correlationId,
-                                        string $actorEmail,
-                                        string $commandCreatedDateTime,
-                                        string $aggregateId,
-                                        string $aggregateName,
-                                        string $payload
-    ): void
+    private function getAggregateRootSchemas() : array
     {
+        $aggregateRootSchemas = [];
+        $schemDirectory = $this->outbounds->getAppAggregateRootSchemaDirectory();
+        $aggregateRootFiles = scandir($schemDirectory);
+        foreach ($aggregateRootFiles as $aggregateRootFile) {
+            if (pathinfo($aggregateRootFile, PATHINFO_EXTENSION) === "yaml") {
+                $aggregateRootSchemas[] = yaml_parse(file_get_contents($schemDirectory . '/' . $aggregateRootFile));
+            }
+        }
+        return $aggregateRootSchemas;
+    }
+
+    public function createAggregateRoot(
+        string $correlationId,
+        string $actorEmail,
+        string $commandCreatedDateTime,
+        string $aggregateId,
+        string $aggregateName,
+        string $payload
+    ) : void {
         echo "create AggregateRoot";
 
-        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->aggregateRootOutbounds);
+        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
-        echo 'rootObjectSchemaFileLink'.PHP_EOL;
-        print_r($this->aggregateRootOutbounds->getAggregateRootSchema($aggregateName));
-        echo PHP_EOL.PHP_EOL;
+        echo 'rootObjectSchemaFileLink' . PHP_EOL;
+        print_r($this->outbounds->getAggregateRootSchema($aggregateName));
+        echo PHP_EOL . PHP_EOL;
 
         $aggregateRoot->create(
             $correlationId,
@@ -57,7 +72,7 @@ class AggregateRootService
             $commandCreatedDateTime,
             $aggregateId,
             $aggregateName,
-            $this->aggregateRootOutbounds->getAggregateRootSchema($aggregateName),
+            $this->outbounds->getAggregateRootSchema($aggregateName),
             $payload
         );
     }
@@ -65,20 +80,21 @@ class AggregateRootService
     /**
      * @throws \JsonException
      */
-    public function changeAggregateRoot(string $correlationId,
-                                        string $actorEmail,
-                                        string $commandCreatedDateTime,
-                                        string $aggregateId,
-                                        string $aggregateName,
-                                        string $payload): void
-    {
-        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->aggregateRootOutbounds);
+    public function changeAggregateRoot(
+        string $correlationId,
+        string $actorEmail,
+        string $commandCreatedDateTime,
+        string $aggregateId,
+        string $aggregateName,
+        string $payload
+    ) : void {
+        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
-        $rootObjectSchemaFileLink = $this->aggregateRootOutbounds->getAggregateRootSchema($aggregateName);
+        $rootObjectSchemaFileLink = $this->outbounds->getAggregateRootSchema($aggregateName);
 
-        echo 'rootObjectSchemaFileLink'.PHP_EOL;
+        echo 'rootObjectSchemaFileLink' . PHP_EOL;
         print_r($rootObjectSchemaFileLink);
-        echo PHP_EOL.PHP_EOL;
+        echo PHP_EOL . PHP_EOL;
 
         $aggregateRoot->change(
             $correlationId,
@@ -91,17 +107,18 @@ class AggregateRootService
         );
     }
 
-    public function deleteAggregateRoot(string $correlationId,
-                                        string $actorEmail,
-                                        string $commandCreatedDateTime,
-                                        string $aggregateId,
-                                        string $aggregateName,
-    )
-    {
-        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->aggregateRootOutbounds);
+    public function deleteAggregateRoot(
+        string $correlationId,
+        string $actorEmail,
+        string $commandCreatedDateTime,
+        string $aggregateId,
+        string $aggregateName,
+    ) {
+        $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
-        $rootObjectSchema = $this->aggregateRootOutbounds->getAggregateRootSchema($aggregateName);
-        $aggregateRoot->delete($correlationId, $actorEmail, $commandCreatedDateTime, $aggregateId, $aggregateName, $rootObjectSchema);
+        $rootObjectSchema = $this->outbounds->getAggregateRootSchema($aggregateName);
+        $aggregateRoot->delete($correlationId, $actorEmail, $commandCreatedDateTime, $aggregateId, $aggregateName,
+            $rootObjectSchema);
     }
 
     /**

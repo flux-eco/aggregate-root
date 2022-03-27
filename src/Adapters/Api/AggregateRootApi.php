@@ -33,15 +33,15 @@ class AggregateRootApi
     public static function new(): self
     {
         $aggregateRootService = Ports\AggregateRootService::new(
-            Adapters\Configs\AggregateRootOutbounds::new()
+            Adapters\Configs\Outbounds::new()
         );
         $valueObjectCreatorClient = Adapters\ValueObjectProvider\ValueObjectProviderClient::new();
         return new self($aggregateRootService, $valueObjectCreatorClient);
     }
 
-    final public function initializeAggregateRoot(string $aggregateName): void
+    final public function initializeAggregateRoots(): void
     {
-        $this->aggregateRootService->createEventStorage($aggregateName);
+        $this->aggregateRootService->initialiceAggregateRoots($aggregateName);
     }
 
     /**

@@ -5,35 +5,34 @@ namespace FluxEco\AggregateRoot\Adapters\Configs;
 use FluxEco\AggregateRoot\{Adapters, Core\Ports};
 use function Swoole\Coroutine\Http\get;
 
-class AggregateRootOutbounds implements Ports\Configs\AggregateRootOutbounds
+class Outbounds implements Ports\Configs\Outbounds
 {
     private const DATABASE_NAME = 'events';
 
     private string $databaseName;
-    private array $aggregateRootEventSchema;
 
 
     private function __construct(
         string $databaseName,
-        array  $aggregateRootEventSchema
     )
     {
         $this->databaseName = $databaseName;
-        $this->aggregateRootEventSchema = $aggregateRootEventSchema;
     }
 
     public static function new(): self
     {
-        $aggregateRootEventSchemaPath = getenv(AggregateRootEnv::PARAM_AGGREGATE_ROOT_EVENT_SCHEMA);
-        $aggregateEventSchema = yaml_parse(file_get_contents($aggregateRootEventSchemaPath));
+        return new self(self::DATABASE_NAME);
+    }
 
-        return new self(self::DATABASE_NAME, $aggregateEventSchema);
+    final public function getAppAggregateRootSchemaDirectory(): string
+    {
+        return getenv(AggregateRootEnv::APP_AGGREGATEROOT_SCHEMA_DIRECTORY);
     }
 
 
     final public function getAggregateRootSchema(string $aggregateName): array
     {
-        $schemaFile = getenv(AggregateRootEnv::PARAM_APP_AGGREGATEROOT_SCHEMA_DIRECTORY).'/'.$aggregateName.'.yaml';
+        $schemaFile = getenv(AggregateRootEnv::APP_AGGREGATEROOT_SCHEMA_DIRECTORY).'/'.$aggregateName.'.yaml';
         return yaml_parse(file_get_contents($schemaFile));
     }
 
@@ -55,7 +54,7 @@ class AggregateRootOutbounds implements Ports\Configs\AggregateRootOutbounds
         return Adapters\Storage\EventStorageClientClient::new(
             $this->databaseName,
             $aggregateName,
-            $this->aggregateRootEventSchema
+            $this->getAggregateRootEventSchema()
         );
     }
 
@@ -65,9 +64,9 @@ class AggregateRootOutbounds implements Ports\Configs\AggregateRootOutbounds
     }
 
 
-    public function getAggregateEventSchema(): array
+    public function getAggregateRootEventSchema(): array
     {
-        return $this->aggregateRootEventSchema;
+        return yaml_parse(file_get_contents(getenv(AggregateRootEnv::FLUXECO_AGGREGATEROOT_DIRECTORY).'/schemas/AggregateRootEvent.yaml'));
     }
 
     public function getSchemaFileReader(): Ports\SchemaReader\SchemaFileReader

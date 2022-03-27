@@ -2,8 +2,8 @@
 
 namespace FluxEco\AggregateRoot\Adapters\ValueObjectProvider;
 
-use  FluxEco\AggregateRoot\Core;
-use FluxEco\ValueObjectAdapters\Api;
+use FluxEco\AggregateRoot\Core;
+use FluxEco\ValueObject\Adapters\Api;
 
 class ValueObjectProviderClient implements Core\Ports\ValueObjectProvider\ValueObjectProviderClient
 {
