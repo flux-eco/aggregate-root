@@ -1,7 +1,6 @@
 # flux-eco/aggregate-root
 
-Manage aggregate roots described as json schema. Stores **create**, **changed**, and 
-**delete events** in a storage. Up to now this component is binded to a mysql storage. 
+Manage aggregate roots described as json schema. Evaluates and stores events in a storage. Up to now this component is binded to a mysql storage. 
 The storage can be replaced by the implementation of a further adapter.
 
 The usage is demonstrated by the following example application:
