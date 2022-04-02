@@ -1,17 +1,12 @@
 {
   "name": "flux-eco/aggregate-root",
-  "description": "flux-ecosystem component for developing flux-capacitor apps developed by fluxlabs ag",
-  "version": "0.0.1",
+  "description": "Manage aggregate roots described as json schema",
+  "version": "0.0.2",
   "type": "flux-app",
   "keywords": [
-    "flux-ecosystem",
-    "flux-capacitor",
-    "fluxlabs ag",
-    "microservice",
-    "event sourcing",
-    "cqrs",
-    "json schema",
-    "asyncapi"
+    "flux-eco",
+    "aggregate-root",
+    "fluxlabs"
   ],
   "homepage": "https://fluxlabs.ch",
   "license": "GPL-3.0-only",
