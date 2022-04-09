@@ -6,33 +6,33 @@ use FluxEco\AggregateRoot\Core\{Application\Handlers, Application\Processes, Dom
 
 class AggregateRootService
 {
-    private Configs\Outbounds $outbounds;
+    private Outbounds $outbounds;
 
     private function __construct(
-        Configs\Outbounds $outbounds
+        Outbounds $outbounds
     ) {
+
         $this->outbounds = $outbounds;
     }
 
-    public static function new(Configs\Outbounds $aggregateRootOutbounds) : self
+    public static function new(Outbounds $aggregateRootOutbounds) : self
     {
         return new self(
             $aggregateRootOutbounds
         );
     }
 
-    final public function initialiceAggregateRoots() : void
+    final public function initialize() : void
     {
         foreach ($this->getAggregateRootSchemas() as $schema) {
             $aggregateName = $schema['name'];
 
             $createEventStorageProcess = Processes\CreateAggregateRootEventStorageProcess::new();
 
-            $eventStorage = $this->outbounds->getAggregateEventStorageClient($aggregateName);
             $eventSchema = $this->outbounds->getAggregateRootEventSchema();
 
             $command = Handlers\CreateAggregateRootEventStorageCommand::new($aggregateName, $eventSchema);
-            $handler = Handlers\CreateAggregateRootEventStorageHandler::new($eventStorage);
+            $handler = Handlers\CreateAggregateRootEventStorageHandler::new($this->outbounds);
             $createEventStorageProcess->process($command, $handler);
         }
     }
@@ -50,7 +50,7 @@ class AggregateRootService
         return $aggregateRootSchemas;
     }
 
-    public function createAggregateRoot(
+    public function create(
         string $correlationId,
         string $actorEmail,
         string $commandCreatedDateTime,
@@ -76,7 +76,7 @@ class AggregateRootService
     /**
      * @throws \JsonException
      */
-    public function changeAggregateRoot(
+    public function change(
         string $correlationId,
         string $actorEmail,
         string $commandCreatedDateTime,
@@ -99,7 +99,7 @@ class AggregateRootService
         );
     }
 
-    public function deleteAggregateRoot(
+    public function delete(
         string $correlationId,
         string $actorEmail,
         string $commandCreatedDateTime,
@@ -112,34 +112,4 @@ class AggregateRootService
         $aggregateRoot->delete($correlationId, $actorEmail, $commandCreatedDateTime, $aggregateId, $aggregateName,
             $rootObjectSchema);
     }
-
-    /**
-     * @param Domain\AggregateRootEventStream $eventStream
-     * @return void
-     */
-    /*
-    private function storeAndPublishAggregateRootEvents(Domain\AggregateRootEventStream $eventStream): void
-    {
-
-        if ($eventStream->hasRecordedEvents()) {
-            $process = Processes\StoreAggregateRootEventProcess::new();
-            $handler = Handlers\StoreAggregateRootChangedEventHandler::new($this->aggregateRootOutbounds->getAggregateEventStorageClient());
-            foreach ($eventStream->getRecordedEvents() as $event) {
-                $command = Handlers\StoreAggregateRootChangedEventCommand::fromEvent($event);
-                $process->process($command, $handler);
-
-
-                //todo only publish the last change or every change? // also publish the correlationId or not?
-
-                $aggregateId = $event->getAggregateId();
-                $aggregateName = $event->getAggregateName();
-                $aggregateRootOutbounds = $this->aggregateRootOutbounds;
-                $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $aggregateRootOutbounds);
-
-                $globalStream = $this->aggregateRootOutbounds->getGlobalStreamClient($aggregateName);
-                $globalStream->publishAggregateRootChanged($event->getCorrelationId(), $aggregateRoot);
-            }
-        }
-    }*/
-
 }

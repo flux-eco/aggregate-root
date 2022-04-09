@@ -17,8 +17,8 @@ class RootObject implements \JsonSerializable
     {
         $obj = new self();
         foreach ($properties as $key => $value) {
-            if (is_null($value)) {
-                continue;
+            if (is_null($value) || is_array($value) === false) {
+                continue; //todo check this. it should not happen
             }
             $obj->properties->offsetSet($key, RootObjectProperty::fromArray($value));
         }

@@ -5,27 +5,27 @@ namespace FluxEco\AggregateRoot\Core\Domain;
 use Exception;
 use FluxEco\AggregateRoot\Core\{Domain\Events\AggregateStateChangedEvent, Ports};
 
-class AggregateRootEventStream implements Ports\Storage\AggregateRootEventStream
+class AggregateRootEventStream
 {
     protected static array $instances = [];
 
     private array $recordedEvents = [];
     private array $stream = [];
     private int $lastSequence = 0;
-    private Ports\Storage\AggregateEventStorageClient $aggregateEventStorageClient;
+    private Ports\Outbounds $outbounds;
     private Ports\GlobalStream\GlobalStreamClient $globalStreamClient;
 
 
     private function __construct(
         string                                    $aggregateId,
         string                                    $aggregateName,
-        Ports\Storage\AggregateEventStorageClient $aggregateEventStorageClient,
+        Ports\Outbounds $outbounds,
     )
     {
         $this->aggregateId = $aggregateId;
         $this->aggregateName = $aggregateName;
 
-        $this->aggregateEventStorageClient = $aggregateEventStorageClient;
+        $this->outbounds = $outbounds;
 
         $this->loadEvents();
     }
@@ -37,11 +37,11 @@ class AggregateRootEventStream implements Ports\Storage\AggregateRootEventStream
 
     public static function new(string                                    $aggregateId,
                                string                                    $aggregateName,
-                               Ports\Storage\AggregateEventStorageClient $aggregateEventStorageClient
+                               Ports\Outbounds $outbounds
     ): self
     {
         if (!array_key_exists($aggregateId, static::$instances)) {
-            static::$instances[$aggregateId] = new self($aggregateId, $aggregateName, $aggregateEventStorageClient);
+            static::$instances[$aggregateId] = new self($aggregateId, $aggregateName, $outbounds);
         }
         return static::$instances[$aggregateId];
     }
@@ -51,7 +51,7 @@ class AggregateRootEventStream implements Ports\Storage\AggregateRootEventStream
         $aggregateId = $this->aggregateId;
         $aggregateName = $this->aggregateName;
 
-        $aggregateEvents = $this->aggregateEventStorageClient->queryEvents($aggregateId, $aggregateName);
+        $aggregateEvents = $this->outbounds->queryEvents($aggregateId, $aggregateName);
         if (count($aggregateEvents) > 0) {
             foreach ($aggregateEvents as $event) {
                 $this->applyEvent($event);
@@ -125,9 +125,9 @@ class AggregateRootEventStream implements Ports\Storage\AggregateRootEventStream
     public function storeAggregateRootEvents(): void
     {
         if ($this->hasRecordedEvents()) {
-            $aggregateEventStorageClient = $this->aggregateEventStorageClient;
+
             foreach ($this->getRecordedEvents() as $event) {
-                $aggregateEventStorageClient->storeAggregateRootChangedEvent($event);
+                $this->outbounds->storeAggregateRootChangedEvent($event);
             }
             $this->flushRecordedEvents();
         }
