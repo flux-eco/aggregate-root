@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [1.0.1]
+* fixed create signature
+
 ## [1.0.0]
 * added functional usage
 

@@ -56,8 +56,8 @@ class Api
     final public function create(
         string $correlationId,
         string $actorEmail,
-        string $aggregateName,
         string $aggregateId,
+        string $aggregateName,
         string $payload
     ): void
     {

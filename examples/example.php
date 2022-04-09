@@ -16,7 +16,7 @@ $payload = json_encode([
    "firstname" => "Emmett",
    "lastname" => "Brown"
 ]);
-fluxAggregateRoot\create($correlationId, $actorEmail, $aggregateName, $aggregateId, $payload);
+fluxAggregateRoot\create($correlationId, $actorEmail, $aggregateId, $aggregateName, $payload);
 
 
 //change
