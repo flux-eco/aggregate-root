@@ -10,15 +10,15 @@ use FluxEco\AggregateRoot;
 function create(
     string $correlationId,
     string $actorEmail,
-    string $aggregateName,
     string $aggregateId,
+    string $aggregateName,
     string $payload
 ) : void {
     AggregateRoot\Api::newFromEnv()->create(
         $correlationId,
         $actorEmail,
-        $aggregateName,
         $aggregateId,
+        $aggregateName,
         $payload
     );
 }
