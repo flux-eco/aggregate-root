@@ -3,7 +3,7 @@
 namespace FluxEco\AggregateRoot\Core\Domain;
 
 use Exception;
-use FluxEco\AggregateRoot\Core\{Application, Domain\Models, Ports\Configs\Outbounds};
+use FluxEco\AggregateRoot\Core\{Application, Domain\Models, Ports};
 
 
 class AggregateRoot implements \JsonSerializable
@@ -33,20 +33,20 @@ class AggregateRoot implements \JsonSerializable
     private ?Models\RootObject $rootObject = null;
 
     private AggregateRootEventStream $eventStream;
-    private Outbounds $aggregateRootOutbounds;
+    private Ports\Outbounds $outbounds;
 
     private function __construct(
         string                   $aggregateId,
         string                   $aggregateName,
         AggregateRootEventStream $eventStream,
-        Outbounds   $aggregateRootOutbounds
+        Ports\Outbounds   $outbounds
     )
     {
         $this->aggregateId = $aggregateId;
         $this->aggregateName = $aggregateName;
 
         $this->eventStream = $eventStream;
-        $this->aggregateRootOutbounds = $aggregateRootOutbounds;
+        $this->outbounds = $outbounds;
 
         $this->lifeCycleStatus = self::AGGREGATE_ROOT_STATUS_LIFECYCLE_INCOMPLETE;
 
@@ -56,17 +56,15 @@ class AggregateRoot implements \JsonSerializable
     public static function new(
         string                 $aggregateId,
         string                 $aggregateName,
-        Outbounds $aggregateRootOutbounds
+        Ports\Outbounds $outbounds
 
     ): self
     {
         if (!array_key_exists($aggregateId, static::$instances)) {
-            //todo from outside?
-            $aggregateEventStorageClient = $aggregateRootOutbounds->getAggregateEventStorageClient($aggregateName);
             $aggregateRootEventStream = AggregateRootEventStream::new(
                 $aggregateId,
                 $aggregateName,
-                $aggregateEventStorageClient
+                $outbounds
             );
             //todo END
 
@@ -74,7 +72,7 @@ class AggregateRoot implements \JsonSerializable
                 $aggregateId,
                 $aggregateName,
                 $aggregateRootEventStream,
-                $aggregateRootOutbounds
+                $outbounds
             );
         }
         return static::$instances[$aggregateId];
@@ -99,8 +97,7 @@ class AggregateRoot implements \JsonSerializable
 
         $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
 
-        $objectProviderClient = $this->aggregateRootOutbounds->getValueObjectProviderClient();
-        $eventId = $objectProviderClient->createUuid()->getValue();
+        $eventId = $this->outbounds->getNewUuid();
 
         $this->applyRecordAndPublishCurrentState(
             Events\AggregateStateChangedEvent::new(
@@ -145,8 +142,7 @@ class AggregateRoot implements \JsonSerializable
 
         $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
 
-        $objectProviderClient = $this->aggregateRootOutbounds->getValueObjectProviderClient();
-        $eventId = $objectProviderClient->createUuid()->getValue();
+        $eventId = $this->outbounds->getNewUuid();
 
         $this->applyRecordAndPublishCurrentState(
             Events\AggregateStateChangedEvent::new(
@@ -179,8 +175,7 @@ class AggregateRoot implements \JsonSerializable
 
         $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
 
-        $objectProviderClient = $this->aggregateRootOutbounds->getValueObjectProviderClient();
-        $eventId = $objectProviderClient->createUuid()->getValue();
+        $eventId = $this->outbounds->getNewUuid();
 
         $this->applyRecordAndPublishCurrentState(
             Events\AggregateStateChangedEvent::new(
@@ -339,9 +334,7 @@ class AggregateRoot implements \JsonSerializable
 
     private function publishStateChanged(string $corrleationId, string $eventName): void
     {
-        $aggregateName = $this->aggregateName;
-        $globalStreamClient = $this->aggregateRootOutbounds->getGlobalStreamClient($aggregateName);
-        $globalStreamClient->publishAggregateRootChanged($corrleationId, $eventName, $this);
+        $this->outbounds->publishAggregateRootChanged($corrleationId, $eventName, $this);
     }
 
 
@@ -408,6 +401,6 @@ class AggregateRoot implements \JsonSerializable
      */
     private function jsonDecodeRootObject(string $rootObjectAsJson, array $rootObjectSchema): Models\RootObject
     {
-        return $this->aggregateRootOutbounds->getSchemaInstanceProvider()->provideRootObject($rootObjectAsJson, $rootObjectSchema);
+        return $this->outbounds->jsonDecodeRootObject($rootObjectAsJson, $rootObjectSchema);
     }
 }

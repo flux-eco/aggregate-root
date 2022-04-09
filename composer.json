@@ -1,7 +1,7 @@
 {
   "name": "flux-eco/aggregate-root",
   "description": "Manage aggregate roots described as json schema",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "type": "flux-app",
   "keywords": [
     "flux-eco",
@@ -22,22 +22,30 @@
     "email": "support@fluxlabs.ch"
   },
   "require": {
-    "flux-eco/global-stream": ">=0.0.1",
-    "flux-eco/storage": ">=0.0.1",
-    "flux-eco/value-object": ">=0.0.1",
+    "flux-eco/global-stream": ">=1.0.0",
+    "flux-eco/storage": ">=1.0.0",
+    "flux-eco/value-object": ">=1.0.0",
     "flux-eco/json-schema-assertion": ">=0.0.1",
-    "flux-eco/json-schema-instance": ">=0.0.1",
-    "flux-eco/json-schema-document": ">=0.0.1",
+    "flux-eco/json-schema-instance": ">=1.0.0",
+    "flux-eco/json-schema-document": ">=1.0.0",
     "php": ">=8.0",
     "ext-curl": "*",
     "ext-json": "*",
     "ext-yaml": "*"
   },
-
   "autoload": {
+    "files": [
+      "fn/change.php",
+      "fn/create.php",
+      "fn/delete.php",
+      "fn/initialize.php"
+    ],
     "psr-4": {
       "FluxEco\\AggregateRoot\\": [
         "src/"
+      ],
+      "fluxAggregateRoot\\": [
+        "fn/"
       ]
     }
   },

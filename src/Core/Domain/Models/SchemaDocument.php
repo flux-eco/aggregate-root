@@ -1,11 +1,12 @@
 <?php
 
 namespace FluxEco\AggregateRoot\Core\Domain\Models;
-use FluxEco\AggregateRoot\Core\Ports;
+
+use FluxEco\JsonSchemaDocument;
 
 class SchemaDocument
 {
-    /** @var Ports\SchemaReader\SchemaObject[] */
+    /** @var JsonSchemaDocument\SchemaObject[] */
     private array $properties;
 
     private function __construct(array $properties)
@@ -13,13 +14,13 @@ class SchemaDocument
         $this->properties = $properties;
     }
 
-    /** @param Ports\SchemaReader\SchemaObject[] $properties */
-    public static function new(array $properties): self
+    /** @param JsonSchemaDocument\SchemaObject[] $properties */
+    public static function new(array $properties) : self
     {
         return new self($properties);
     }
 
-    public function offsetExists(string $transmittedPropertyKey): bool
+    public function offsetExists(string $transmittedPropertyKey) : bool
     {
         return array_key_exists($transmittedPropertyKey, $this->properties);
     }
@@ -29,8 +30,8 @@ class SchemaDocument
         return $this->properties[$transmittedPropertyKey];
     }
 
-    /** @return Ports\SchemaReader\SchemaObject[] */
-    public function getProperties(): array
+    /** @return JsonSchemaDocument\SchemaObject[] */
+    public function getProperties() : array
     {
         return $this->properties;
     }

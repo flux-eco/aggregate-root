@@ -6,27 +6,28 @@ use FluxEco\AggregateRoot\Core\{Ports};
 
 class CreateAggregateRootEventStorageHandler implements Handler
 {
-    private Ports\Storage\AggregateEventStorageClient $eventStorageClient;
+    private Ports\Outbounds $outbounds;
 
 
     private function __construct(
-        Ports\Storage\AggregateEventStorageClient $eventStorageClient)
+        Ports\Outbounds $outbounds
+    )
     {
-        $this->eventStorageClient = $eventStorageClient;
+        $this->outbounds = $outbounds;
     }
 
     public static function new(
-        Ports\Storage\AggregateEventStorageClient $eventStorageClient
+        Ports\Outbounds $outbounds
     ): self
     {
         return new self(
-            $eventStorageClient
+            $outbounds
         );
     }
 
     public function handle(Command|CreateAggregateRootEventStorageCommand $createEventStorageCommand)
     {
-        $tableName = $createEventStorageCommand->getAggregateName();
-        $this->eventStorageClient->createAggregateEventsStorage($tableName);
+        $aggregateName = $createEventStorageCommand->getAggregateName();
+        $this->outbounds->createAggregateRootEventsStorage($aggregateName);
     }
 }
