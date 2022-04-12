@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.0.2]
+* fix: change signature
+* fix: delete dignature
+
 ## [1.0.1]
 * fixed create signature
 

@@ -58,8 +58,6 @@ class AggregateRootService
         string $aggregateName,
         string $payload
     ) : void {
-        echo "create AggregateRoot";
-
         $aggregateRoot = Domain\AggregateRoot::new($aggregateId, $aggregateName, $this->outbounds);
 
         $aggregateRoot->create(

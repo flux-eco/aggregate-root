@@ -14,7 +14,7 @@ function delete(
     AggregateRoot\Api::newFromEnv()->delete(
         $correlationId,
         $actorEmail,
-        $aggregateName,
-        $aggregateId
+        $aggregateId,
+        $aggregateName
     );
 }

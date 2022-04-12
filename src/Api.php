@@ -7,7 +7,6 @@ use FluxEco\AggregateRoot\{Adapters, Core\Ports};
 
 class Api
 {
-    private Adapters\ValueObjectProvider\ValueObjectProviderClient $valueObjectCreatorClient;
     private Ports\AggregateRootService $aggregateRootService;
     private Adapters\Outbounds $outbounds;
 
