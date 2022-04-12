@@ -14,8 +14,8 @@ function change(
     AggregateRoot\Api::newFromEnv()->change(
         $correlationId,
         $actorEmail,
-        $aggregateName,
         $aggregateId,
+        $aggregateName,
         $payload
     );
 }
