@@ -25,7 +25,7 @@ class AggregateRootService
     final public function initialize() : void
     {
         foreach ($this->getAggregateRootSchemas() as $schema) {
-            $aggregateName = $schema['name'];
+            $aggregateName = $schema['title'];
 
             $createEventStorageProcess = Processes\CreateAggregateRootEventStorageProcess::new();
 

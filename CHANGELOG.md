@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [1.0.3]
+* change: property key name to title in schema 
+
 ## [1.0.2]
 * fix: change signature
 * fix: delete dignature
