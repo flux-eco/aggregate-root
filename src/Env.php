@@ -30,6 +30,6 @@ class Env
 
     public function getAggregateRootStorageConfigEnvPrefix() : string
     {
-        return getEnv(self::AGGREGATE_ROOT_STORAGE_CONFIG_ENV_PREFIX);
+        return getenv(self::AGGREGATE_ROOT_STORAGE_CONFIG_ENV_PREFIX);
     }
 }

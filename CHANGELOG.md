@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [1.0.4]
+* fix: bug env file
+
 ## [1.0.3]
 * change: property key name to title in schema 
 
