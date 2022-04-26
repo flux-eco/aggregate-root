@@ -52,11 +52,11 @@ class RootObjectProperty implements \JsonSerializable
 
     public function equals(mixed $other): bool
     {
-        echo "currentValue: ";
-        echo $this->getValue().PHP_EOL;
-        echo "otherValue: ";
-        echo $other->getValue().PHP_EOL;
-        echo ($this->getValue() === $other->getValue());
+        //echo "currentValue: ";
+        //echo $this->getValue().PHP_EOL;
+        //echo "otherValue: ";
+        //echo $other->getValue().PHP_EOL;
+        //echo ($this->getValue() === $other->getValue()).PHP_EOL;;
         return ($this->getValue() === $other->getValue());
     }
 

@@ -50,6 +50,24 @@ class AggregateRootService
         return $aggregateRootSchemas;
     }
 
+    public function store(
+        string $correlationId,
+        string $actorEmail,
+        string $commandCreatedDateTime,
+        string $aggregateId,
+        string $aggregateName,
+        string $payload
+    ) : void {
+
+        $events = $this->outbounds->queryEvents($aggregateId, $aggregateName);
+
+        if(count($events) > 0) {
+            $this->change($correlationId, $actorEmail, $commandCreatedDateTime, $aggregateId, $aggregateName, $payload);
+            return;
+        }
+        $this->create($correlationId, $actorEmail, $commandCreatedDateTime, $aggregateId, $aggregateName, $payload);
+    }
+
     public function create(
         string $correlationId,
         string $actorEmail,

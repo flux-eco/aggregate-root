@@ -52,6 +52,29 @@ class Api
     /**
      * @throws \JsonException
      */
+    final public function store(
+        string $correlationId,
+        string $actorEmail,
+        string $aggregateId,
+        string $aggregateName,
+        string $payload
+    ): void
+    {
+        $commandCreatedDateTime = $this->outbounds->getCurrentTime();
+
+        $this->aggregateRootService->store(
+            $correlationId,
+            $actorEmail,
+            $commandCreatedDateTime,
+            $aggregateId,
+            $aggregateName,
+            $payload
+        );
+    }
+
+    /**
+     * @throws \JsonException
+     */
     final public function create(
         string $correlationId,
         string $actorEmail,
@@ -120,5 +143,4 @@ class Api
             $aggregateName
         );
     }
-
 }
