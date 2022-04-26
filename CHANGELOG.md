@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## [1.1.0]
-* fix: bug env file
+* added fluxAggregateRoot\store
 
 ## [1.0.4]
 * fix: bug env file
