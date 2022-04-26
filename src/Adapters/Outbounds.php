@@ -77,7 +77,8 @@ class Outbounds implements Core\Ports\Outbounds
     ): array
     {
         $filter = ['aggregateId' => $aggregateId];
-        $queryResult = fluxStorage\getData($aggregateName,  $this->getAggregateRootEventSchema(), $this->aggregateRootStorageConfigEnvPrefix, $filter, 0, 0, 'sequence ASC');
+        $queryResult = fluxStorage\getData($aggregateName,  $this->getAggregateRootEventSchema(), $this->aggregateRootStorageConfigEnvPrefix, $filter, null, null, 'sequence ASC');
+        echo "Aggregate ".$aggregateId." events queried: ".count($queryResult).PHP_EOL;
         return Adapters\Storage\AggregateStateChangedEventsAdapter::fromQueryResult($queryResult)->toEvents();
     }
 

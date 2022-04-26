@@ -4,7 +4,7 @@ namespace FluxEco\AggregateRoot\Core\Domain;
 
 use Exception;
 use FluxEco\AggregateRoot\Core\{Application, Domain\Models, Ports};
-
+use Symfony\Component\Process\PhpProcess;
 
 class AggregateRoot implements \JsonSerializable
 {
@@ -99,6 +99,7 @@ class AggregateRoot implements \JsonSerializable
 
         $eventId = $this->outbounds->getNewUuid();
 
+        echo "Create Aggregate ".PHP_EOL;
         $this->applyRecordAndPublishCurrentState(
             Events\AggregateStateChangedEvent::new(
                 $sequence,
@@ -113,7 +114,9 @@ class AggregateRoot implements \JsonSerializable
                 json_encode($rootObject, JSON_THROW_ON_ERROR)
             )
         );
+        echo "Create Store AggregateEvents ".PHP_EOL;
         $this->eventStream->storeAggregateRootEvents();
+        echo "AggregateEvents stored".PHP_EOL;
         return $this;
     }
 
@@ -138,6 +141,8 @@ class AggregateRoot implements \JsonSerializable
         if ($reducedRootObject->getProperties()->count() === 0) {
             return $this;
         }
+
+
         $sequence = $this->eventStream->getNextSequence();
 
         $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
@@ -197,12 +202,18 @@ class AggregateRoot implements \JsonSerializable
     private function reduceToChangedProperties(Models\RootObject $transmittedRootObject,  array  $rootObjectSchema): Models\RootObject
     {
         $currentRootObject = $this->rootObject;
-        $schemaProperties = $rootObjectSchema['properties'];
+        $schemaProperties = $rootObjectSchema['properties']['rootObject']['properties'];
 
         if ($transmittedRootObject->getProperties()->count() > 0) {
 
             $currentRootObjectProperties = $currentRootObject->getProperties();
+            //echo "schema properties ".print_r($schemaProperties, true).PHP_EOL;
+
+            //echo "currentRootObjectProperties ".print_r($currentRootObjectProperties, true).PHP_EOL;
+
             $transmittedRootObjectProperties = $transmittedRootObject->getProperties();
+
+            //echo "transmittedRootObjectProperties ".print_r($transmittedRootObjectProperties, true).PHP_EOL;
 
             //TODO
             foreach ($schemaProperties as $schemaPropertyKey => $schemaProperty) {
@@ -214,7 +225,7 @@ class AggregateRoot implements \JsonSerializable
                     $transmittedRootObjectProperties->offsetExists($schemaPropertyKey)
                 ) {
                     $transmittedProperty = $transmittedRootObjectProperties->offsetGet($schemaPropertyKey);
-                    if ($currentRootObjectProperties->offsetExists($schemaPropertyKey)) {
+                    if ($currentRootObjectProperties->offsetExists($schemaPropertyKey) === true) {
                         $currentProperty = $currentRootObjectProperties->offsetGet($schemaPropertyKey);
                         if ($currentProperty->equals($transmittedProperty) === true) {
                             $transmittedRootObject->getProperties()->offsetUnset($schemaPropertyKey);
@@ -223,6 +234,8 @@ class AggregateRoot implements \JsonSerializable
                 }
             }
         }
+
+        //echo  "reduced transmittedRootObjectProperties ".print_r($transmittedRootObject, true).PHP_EOL;
 
         return $transmittedRootObject;
     }

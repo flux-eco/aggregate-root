@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e641b75863730ff31c6b5f2799660df",
+    "content-hash": "f352d27e32fa0fbada50a0c480cb3989",
     "packages": [
         {
             "name": "brick/math",
@@ -124,16 +124,16 @@
         },
         {
             "name": "flux-eco/global-stream",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flux-eco/global-stream.git",
-                "reference": "8eac1e19b88ee6d8bf1777f8b363b7f252cd7e7a"
+                "reference": "f125113786ce801e975ae2836591d7113cd3b3d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flux-eco/global-stream/zipball/8eac1e19b88ee6d8bf1777f8b363b7f252cd7e7a",
-                "reference": "8eac1e19b88ee6d8bf1777f8b363b7f252cd7e7a",
+                "url": "https://api.github.com/repos/flux-eco/global-stream/zipball/f125113786ce801e975ae2836591d7113cd3b3d9",
+                "reference": "f125113786ce801e975ae2836591d7113cd3b3d9",
                 "shasum": ""
             },
             "require": {
@@ -184,9 +184,9 @@
             "support": {
                 "email": "support@fluxlabs.ch",
                 "issues": "https://github.com/flux-eco/global-stream/issues",
-                "source": "https://github.com/flux-eco/global-stream/tree/v1.0.0"
+                "source": "https://github.com/flux-eco/global-stream/tree/v1.0.1"
             },
-            "time": "2022-04-09T18:09:43+00:00"
+            "time": "2022-04-15T20:43:33+00:00"
         },
         {
             "name": "flux-eco/json-schema-assertion",
@@ -366,16 +366,16 @@
         },
         {
             "name": "flux-eco/projection",
-            "version": "1.0.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flux-eco/projection.git",
-                "reference": "ca6926f5a346a9d011eb348fd769c436286a56f7"
+                "reference": "e3de2579bbd01be36030776de88b3913c82eabef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flux-eco/projection/zipball/ca6926f5a346a9d011eb348fd769c436286a56f7",
-                "reference": "ca6926f5a346a9d011eb348fd769c436286a56f7",
+                "url": "https://api.github.com/repos/flux-eco/projection/zipball/e3de2579bbd01be36030776de88b3913c82eabef",
+                "reference": "e3de2579bbd01be36030776de88b3913c82eabef",
                 "shasum": ""
             },
             "require": {
@@ -403,11 +403,17 @@
             "autoload": {
                 "files": [
                     "fn/getProjectionIdForAggregateId.php",
+                    "fn/getAggregateIdsForProjectionId.php",
                     "fn/getItem.php",
                     "fn/getItemList.php",
-                    "fn/getProjectionIdForExternalIdIfExists.php",
+                    "fn/getProjectionIdForExternalId.php",
+                    "fn/getAggregateIdForProjectionId.php",
                     "fn/initialize.php",
-                    "fn/receiveAggregateRootStatePublished.php"
+                    "fn/reinitialize.php",
+                    "fn/receiveAggregateRootStatePublished.php",
+                    "fn/getAggregateRootMappingsForProjectionData.php",
+                    "fn/getAggregateIdForExternalId.php",
+                    "fn/registerExternalId.php"
                 ],
                 "psr-4": {
                     "fluxProjection\\": [
@@ -440,22 +446,22 @@
             "support": {
                 "email": "support@fluxlabs.ch",
                 "issues": "https://github.com/flux-eco/projection/issues",
-                "source": "https://github.com/flux-eco/projection/tree/v1.0.0"
+                "source": "https://github.com/flux-eco/projection/tree/v1.6.0"
             },
-            "time": "2022-04-09T19:02:57+00:00"
+            "time": "2022-04-15T22:28:23+00:00"
         },
         {
             "name": "flux-eco/storage",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flux-eco/storage.git",
-                "reference": "986139e2cda44570a7ee8e785a9b92ba07c0854b"
+                "reference": "6913873fa9f623bb06bff7ebee8df682c2b53eed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flux-eco/storage/zipball/986139e2cda44570a7ee8e785a9b92ba07c0854b",
-                "reference": "986139e2cda44570a7ee8e785a9b92ba07c0854b",
+                "url": "https://api.github.com/repos/flux-eco/storage/zipball/6913873fa9f623bb06bff7ebee8df682c2b53eed",
+                "reference": "6913873fa9f623bb06bff7ebee8df682c2b53eed",
                 "shasum": ""
             },
             "require": {
@@ -508,9 +514,9 @@
             ],
             "support": {
                 "email": "support@fluxlabs.ch",
-                "source": "https://github.com/flux-eco/storage/tree/v1.1.0"
+                "source": "https://github.com/flux-eco/storage/tree/v1.1.1"
             },
-            "time": "2022-04-08T21:40:39+00:00"
+            "time": "2022-04-15T23:28:11+00:00"
         },
         {
             "name": "flux-eco/value-object",
@@ -642,16 +648,16 @@
         },
         {
             "name": "laminas/laminas-db",
-            "version": "2.14.1",
+            "version": "2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-db.git",
-                "reference": "7daba1149e69dc828ce083844cde1101c0418afa"
+                "reference": "1125ef2e55108bdfcc1f0030d3a0f9b895e09606"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/7daba1149e69dc828ce083844cde1101c0418afa",
-                "reference": "7daba1149e69dc828ce083844cde1101c0418afa",
+                "url": "https://api.github.com/repos/laminas/laminas-db/zipball/1125ef2e55108bdfcc1f0030d3a0f9b895e09606",
+                "reference": "1125ef2e55108bdfcc1f0030d3a0f9b895e09606",
                 "shasum": ""
             },
             "require": {
@@ -709,7 +715,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-03-30T07:37:42+00:00"
+            "time": "2022-04-11T13:26:20+00:00"
         },
         {
             "name": "laminas/laminas-stdlib",

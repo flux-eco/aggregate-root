@@ -8,6 +8,7 @@ interface Outbounds
     public function getAppAggregateRootSchemaDirectory(): string;
     public function getAggregateRootStorageConfigEnvPrefix() : string;
     public function getAggregateRootEventSchema(): array;
+    public function queryEvents(string $aggregateId,string $aggregateName): array;
     public function createAggregateRootEventsStorage(string $aggregateName): void;
     public function storeAggregateRootChangedEvent(Core\Domain\Events\AggregateStateChangedEvent $event): void;
     public function getAggregateRootSchema(string $aggregateName): array;
