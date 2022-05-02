@@ -23,7 +23,6 @@ class AggregateRoot implements \JsonSerializable
     private string $aggregateId;
     private string $aggregateName;
     private int $currentSequence;
-    private array $rootObjectSchema;
     private string $createdBy;
     private string $createdDateTime;
     private string $lastChangedDateTime;
@@ -91,23 +90,20 @@ class AggregateRoot implements \JsonSerializable
         string $payload
     ): self
     {
-        $rootObject = $this->jsonDecodeRootObject($payload, $rootObjectSchema);
+        $rootObject = $this->jsonDecodeRootObject($payload, $rootObjectSchema['rootObject']);
 
         $sequence = $this->eventStream->getNextSequence();
-
-        $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
 
         $eventId = $this->outbounds->getNewUuid();
 
         echo "Create Aggregate ".PHP_EOL;
-        $this->applyRecordAndPublishCurrentState(
+        $this->applyAndRecord(
             Events\AggregateStateChangedEvent::new(
                 $sequence,
                 $eventId,
                 $correlationId,
                 $aggregateId,
                 $aggregateName,
-                $rootObjectJsonSchema,
                 $actorEmail,
                 $commandCreatedDateTime,
                 self::AGGREGATE_ROOT_CREATED_EVENT,
@@ -115,7 +111,7 @@ class AggregateRoot implements \JsonSerializable
             )
         );
         echo "Create Store AggregateEvents ".PHP_EOL;
-        $this->eventStream->storeAggregateRootEvents();
+        $this->eventStream->storeAndPublishAggregateRootEvents($this);
         echo "AggregateEvents stored".PHP_EOL;
         return $this;
     }
@@ -133,10 +129,10 @@ class AggregateRoot implements \JsonSerializable
         string $payload
     ): self
     {
-        $rootObject = $this->jsonDecodeRootObject($payload, $rootObjectSchema);
+        $rootObject = $this->jsonDecodeRootObject($payload, $rootObjectSchema['rootObject']);
         $reducedRootObject = $this->reduceToChangedProperties(
             $rootObject,
-            $rootObjectSchema
+            $rootObjectSchema['rootObject']
         );
         if ($reducedRootObject->getProperties()->count() === 0) {
             return $this;
@@ -145,25 +141,22 @@ class AggregateRoot implements \JsonSerializable
 
         $sequence = $this->eventStream->getNextSequence();
 
-        $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
-
         $eventId = $this->outbounds->getNewUuid();
 
-        $this->applyRecordAndPublishCurrentState(
+        $this->applyAndRecord(
             Events\AggregateStateChangedEvent::new(
                 $sequence,
                 $eventId,
                 $correlationId,
                 $aggregateId,
                 $aggregateName,
-                $rootObjectJsonSchema,
                 $actorEmail,
                 $commandCreatedDateTime,
                 self::AGGREGATE_ROOT_CHANGED_EVENT,
                 json_encode($reducedRootObject, JSON_THROW_ON_ERROR)
             )
         );
-        $this->eventStream->storeAggregateRootEvents();
+        $this->eventStream->storeAndPublishAggregateRootEvents($this);
         return $this;
     }
 
@@ -172,37 +165,34 @@ class AggregateRoot implements \JsonSerializable
         string $actorEmail,
         string $commandCreatedDateTime,
         string $aggregateId,
-        string $aggregateName,
-        array  $rootObjectSchema,
+        string $aggregateName
     ): void
     {
         $sequence = $this->eventStream->getNextSequence();
 
-        $rootObjectJsonSchema = json_encode($rootObjectSchema, JSON_THROW_ON_ERROR);
-
         $eventId = $this->outbounds->getNewUuid();
 
-        $this->applyRecordAndPublishCurrentState(
+        $this->applyAndRecord(
             Events\AggregateStateChangedEvent::new(
                 $sequence,
                 $eventId,
                 $correlationId,
                 $aggregateId,
                 $aggregateName,
-                $rootObjectJsonSchema,
                 $actorEmail,
                 $commandCreatedDateTime,
                 self::AGGREGATE_ROOT_DELETED_EVENT,
                 '')
         );
-        $this->eventStream->storeAggregateRootEvents();
+        $this->eventStream->storeAndPublishAggregateRootEvents($this);
 
     }
 
     private function reduceToChangedProperties(Models\RootObject $transmittedRootObject,  array  $rootObjectSchema): Models\RootObject
     {
         $currentRootObject = $this->rootObject;
-        $schemaProperties = $rootObjectSchema['properties']['rootObject']['properties'];
+        $schemaProperties = $rootObjectSchema['properties'];
+
 
         if ($transmittedRootObject->getProperties()->count() > 0) {
 
@@ -256,15 +246,11 @@ class AggregateRoot implements \JsonSerializable
         }
     }
 
-    private function applyRecordAndPublishCurrentState(Events\AggregateStateChangedEvent $event)
+    private function applyAndRecord(Events\AggregateStateChangedEvent $event)
     {
         //todo decide ordering of these 3 steps
         $this->applyEvent($event);
         $this->recordEvent($event);
-
-        //todo we could introduce try catch an revert all external state (by correlationId) changes if one of them failes
-        $correlationId = $event->getCorrelationId();
-        $this->publishStateChanged($correlationId, $event->getEventName());
     }
 
     /**
@@ -278,7 +264,6 @@ class AggregateRoot implements \JsonSerializable
 
     private function applyAggregateRootCreated(Events\AggregateStateChangedEvent $event): void
     {
-        $this->rootObjectSchema = json_decode($event->getRootObjectSchema(), true);
         $this->currentSequence = $event->getSequence();
         $this->createdBy = $event->getCreatedBy();
         $this->createdDateTime = $event->getCreatedDateTime();
@@ -299,7 +284,6 @@ class AggregateRoot implements \JsonSerializable
      */
     private function applyAggregateRootChanged(Events\AggregateStateChangedEvent $event): void
     {
-        $this->rootObjectSchema = json_decode($event->getRootObjectSchema(), true);
         $this->currentSequence = $event->getSequence();
         $this->lastChangedBy = $event->getCreatedBy();
         $this->lastChangedDateTime = $event->getCreatedDateTime();
@@ -322,7 +306,6 @@ class AggregateRoot implements \JsonSerializable
      */
     private function applyAggregateRootDeleted(Events\AggregateStateChangedEvent $event): void
     {
-        $this->rootObjectSchema = json_decode($event->getRootObjectSchema(), true);
         $this->currentSequence = $event->getSequence();
         $this->lastChangedBy = $event->getCreatedBy();
         $this->lastChangedDateTime = $event->getCreatedDateTime();
@@ -345,11 +328,6 @@ class AggregateRoot implements \JsonSerializable
         $this->eventStream->applyAndRecordEvent($event);
     }
 
-    private function publishStateChanged(string $corrleationId, string $eventName): void
-    {
-        $this->outbounds->publishAggregateRootChanged($corrleationId, $eventName, $this);
-    }
-
 
     final public function getAggregateId(): string
     {
@@ -368,11 +346,6 @@ class AggregateRoot implements \JsonSerializable
         return $this->currentSequence;
     }
 
-
-    final public function getRootObjectSchema(): array
-    {
-        return $this->rootObjectSchema;
-    }
 
     final public function getCreatedBy(): string
     {

@@ -24,8 +24,6 @@ properties:
     type: string
     format: email
     readOnly: true
-  rootObjectSchema:
-    type: object
   eventName:
     type: string
   payload:

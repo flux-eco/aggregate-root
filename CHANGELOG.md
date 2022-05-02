@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [1.2.0]
+* some refactorings
+
 ## [1.1.0]
 * added fluxAggregateRoot\store
 

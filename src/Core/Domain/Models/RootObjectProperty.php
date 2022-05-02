@@ -5,13 +5,11 @@ namespace FluxEco\AggregateRoot\Core\Domain\Models;
 class RootObjectProperty implements \JsonSerializable
 {
     private mixed $value;
-    private bool $isEntityId;
     private ?string $describedBy;
 
-    private function __construct(mixed $value, bool $isEntityId = false, ?string $describedBy = null)
+    private function __construct(mixed $value, ?string $describedBy = null)
     {
         $this->value = $value;
-        $this->isEntityId = $isEntityId;
         if ($describedBy !== null) {
             $this->describedBy = $describedBy;
         }
@@ -28,11 +26,10 @@ class RootObjectProperty implements \JsonSerializable
 
     public static function new(
         mixed  $value,
-        bool $isEntityId = false,
         ?string $describedBy = null
     ): self
     {
-        return new self($value, $isEntityId, $describedBy);
+        return new self($value, $describedBy);
     }
 
     final public function getDescribedBy(): string
@@ -43,11 +40,6 @@ class RootObjectProperty implements \JsonSerializable
     public function getValue(): mixed
     {
         return $this->value;
-    }
-
-    final public function isEntityId(): bool
-    {
-        return $this->isEntityId;
     }
 
     public function equals(mixed $other): bool

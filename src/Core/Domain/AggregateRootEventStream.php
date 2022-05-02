@@ -3,7 +3,7 @@
 namespace FluxEco\AggregateRoot\Core\Domain;
 
 use Exception;
-use FluxEco\AggregateRoot\Core\{Domain\Events\AggregateStateChangedEvent, Ports};
+use FluxEco\AggregateRoot\Core\{Domain\Events\AggregateStateChangedEvent, Ports, Domain};
 
 class AggregateRootEventStream
 {
@@ -122,12 +122,13 @@ class AggregateRootEventStream
         return $this->aggregateName;
     }
 
-    public function storeAggregateRootEvents(): void
+    public function storeAndPublishAggregateRootEvents(Domain\AggregateRoot $currentState): void
     {
         if ($this->hasRecordedEvents()) {
 
             foreach ($this->getRecordedEvents() as $event) {
                 $this->outbounds->storeAggregateRootChangedEvent($event);
+                $this->outbounds->publishDomainEvents($event->getCorrelationId(), $event, $currentState);
             }
             $this->flushRecordedEvents();
         }

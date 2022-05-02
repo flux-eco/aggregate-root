@@ -25,7 +25,6 @@ class AggregateStateChangedEvent implements \JsonSerializable
         string $correlationId,
         string $aggregateId,
         string $aggregateName,
-        string $rootObjectSchema,
         string $createdBy,
         string $createdDateTime,
         string $eventName,
@@ -38,7 +37,6 @@ class AggregateStateChangedEvent implements \JsonSerializable
         $headers['correlationId'] = $correlationId;
         $headers['aggregateId'] = $aggregateId;
         $headers['aggregateName'] = $aggregateName;
-        $headers['rootObjectSchema'] = $rootObjectSchema;
         $headers['createdBy'] = $createdBy;
         $headers['createdDateTime'] = $createdDateTime;
         $headers['eventName'] = $eventName;
@@ -61,7 +59,6 @@ class AggregateStateChangedEvent implements \JsonSerializable
             $eventData['correlationId'],
             $eventData['aggregateId'],
             $eventData['aggregateName'],
-            $eventData['rootObjectSchema'],
             $eventData['createdBy'],
             $eventData['createdDateTime'],
             $eventData['eventName'],
@@ -92,12 +89,6 @@ class AggregateStateChangedEvent implements \JsonSerializable
     final public function getAggregateName(): string
     {
         return $this->headers['aggregateName'];
-    }
-
-
-    final public function getRootObjectSchema(): string
-    {
-        return $this->headers['rootObjectSchema'];
     }
 
     final public function getCreatedBy(): string
