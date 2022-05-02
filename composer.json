@@ -1,7 +1,7 @@
 {
   "name": "flux-eco/aggregate-root",
   "description": "Manage aggregate roots described as json schema",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "flux-app",
   "keywords": [
     "flux-eco",

@@ -24,7 +24,6 @@ class AggregateStateChangedEventsAdapter
                 $row['correlationId'],
                 $row['aggregateId'],
                 $row['aggregateName'],
-                $row['rootObjectSchema'],
                 $row['createdBy'],
                 $row['createdDateTime'],
                 $row['eventName'],
